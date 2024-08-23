@@ -1,66 +1,68 @@
-document.getElementById('survey-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+const milestones = [
+    { week: 2801, label: "Albert Einstein Died" },
+    { week: 2496, label: "Marilyn Monroe Died" },
+    { week: 2288, label: "John F. Kennedy Died" },
+    { week: 3201, label: "Elvis Presley Died" },
+    { week: 3101, label: "John Lennon Died" },
+    { week: 2901, label: "Martin Luther King Jr. Died" },
+    { week: 3601, label: "Princess Diana Died" },
+    { week: 3701, label: "Michael Jackson Died" },
+    { week: 2401, label: "Mother Teresa Died" },
+    // Add more famous milestones as needed
+];
 
-    // Сбор данных пользователя
-    const age = parseInt(document.getElementById('age').value, 10);
-    const income = parseInt(document.getElementById('income').value, 10);
-    const children = parseInt(document.getElementById('children').value, 10);
-    const savings = parseInt(document.getElementById('savings').value, 10);
-    const debts = parseInt(document.getElementById('debts').value, 10);
-    const housing = parseInt(document.getElementById('housing').value, 10);
-    const weight = parseInt(document.getElementById('weight').value, 10);
-    const masturbation = parseInt(document.getElementById('masturbation').value, 10);
-    const books = parseInt(document.getElementById('books').value, 10);
-    const sleep = parseInt(document.getElementById('sleep').value, 10);
+function generateLifeCalendar() {
+    const birthdateInput = document.getElementById("birthdate").value;
+    if (!birthdateInput) {
+        alert("Please enter your birthdate!");
+        return;
+    }
 
-    // Пример мировых данных (условные значения)
-    const globalData = {
-        averageAge: 35,
-        averageIncome: 50000,
-        averageChildren: 2,
-        averageSavings: 15000,
-        averageDebts: 10000,
-        averageHousing: 20000,
-        averageWeight: 70,
-        averageMasturbation: 3,
-        averageBooks: 5,
-        averageSleep: 7
-    };
+    const birthdate = new Date(birthdateInput);
+    const today = new Date();
+    const ageInWeeks = Math.floor((today - birthdate) / (1000 * 60 * 60 * 24 * 7));
+    const totalWeeks = 91 * 52;
 
-    // Генерация графиков
-    createChart('chartAge', 'Возраст', age, globalData.averageAge);
-    createChart('chartIncome', 'Доход (в рублях)', income, globalData.averageIncome);
-    createChart('chartChildren', 'Количество детей', children, globalData.averageChildren);
-    createChart('chartSavings', 'Сбережения в месяц (в рублях)', savings, globalData.averageSavings);
-    createChart('chartDebts', 'Выплаты по кредитам в месяц (в рублях)', debts, globalData.averageDebts);
-    createChart('chartHousing', 'Плата за жилье в месяц (в рублях)', housing, globalData.averageHousing);
-    createChart('chartWeight', 'Ваш вес (в кг)', weight, globalData.averageWeight);
-    createChart('chartMasturbation', 'Частота мастурбации (в неделю)', masturbation, globalData.averageMasturbation);
-    createChart('chartBooks', 'Количество прочитанных книг в год', books, globalData.averageBooks);
-    createChart('chartSleep', 'Продолжительность сна (в часах)', sleep, globalData.averageSleep);
-});
+    // Hide the input screen and show the calendar screen
+    document.getElementById("birthdate-input-screen").style.display = "none";
+    document.getElementById("life-calendar-screen").style.display = "block";
 
-// Функция для создания графика
-function createChart(canvasId, label, userData, globalData) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Ваши данные', 'Средние данные по миру'],
-            datasets: [{
-                label: label,
-                data: [userData, globalData],
-                backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+    const calendarGrid = document.getElementById("calendar-grid");
+
+    for (let i = 0; i < totalWeeks; i++) {
+        const weekDiv = document.createElement("div");
+        weekDiv.className = "grid-item";
+        
+        if (i < ageInWeeks) {
+            weekDiv.classList.add("past");
         }
-    });
+
+        const milestone = milestones.find(m => m.week === i);
+        if (milestone) {
+            weekDiv.classList.add("milestone");
+            weekDiv.dataset.label = milestone.label;
+        }
+
+        weekDiv.addEventListener('mouseenter', showTooltip);
+        weekDiv.addEventListener('mouseleave', hideTooltip);
+
+        calendarGrid.appendChild(weekDiv);
+    }
+}
+
+function showTooltip(event) {
+    const tooltip = document.getElementById('tooltip');
+    const label = event.target.dataset.label;
+
+    if (label) {
+        tooltip.textContent = label;
+        tooltip.style.left = `${event.pageX + 10}px`;
+        tooltip.style.top = `${event.pageY + 10}px`;
+        tooltip.style.opacity = 1;
+    }
+}
+
+function hideTooltip() {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.style.opacity = 0;
 }
