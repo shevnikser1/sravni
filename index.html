@@ -1,22 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Calendar</title>
+    <title>Твоя жизнь в неделях</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="birthdate-input-screen">
-        <h1>Enter Your Birthdate</h1>
+        <h1>Твоя жизнь в неделях</h1>
+        <p>Каждая неделя важна. Сколько ты уже прожил?</p>
         <input type="date" id="birthdate" />
-        <button onclick="generateLifeCalendar()">Submit</button>
+        <button onclick="generateLifeCalendar()">Узнать свою жизнь</button>
     </div>
 
     <div id="life-calendar-screen" style="display:none;">
-        <h1>Your Life in Weeks</h1>
-        <div id="calendar-grid"></div>
+        <h1>Твоя жизнь в неделях</h1>
+        <p id="quote">“Время не ждет никого.”</p>
+        <div id="timer"></div>
+        <div id="calendar-container">
+            <div id="year-labels"></div>
+            <div id="calendar-wrapper">
+                <div id="week-labels"></div>
+                <div id="calendar-grid"></div>
+            </div>
+        </div>
         <div id="tooltip" class="hidden"></div>
+        <button id="share-btn">Поделиться в соцсетях</button>
     </div>
 
     <script src="script.js"></script>
